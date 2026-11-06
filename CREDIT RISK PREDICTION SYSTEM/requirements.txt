@@ -1,0 +1,17 @@
+flask
+Flask-WTF
+pymysql
+bcrypt
+numpy
+pandas
+scikit-learn
+joblib
+plotly
+pytesseract
+Pillow
+PyPDF2
+fpdf2
+python-dotenv
+xgboost
+imbalanced-learn
+werkzeug

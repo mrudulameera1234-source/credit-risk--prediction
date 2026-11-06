@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decision History | Enterprise Audit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --bg-dark: #0f172a;
+            --sidebar-dark: #020617;
+            --card-glass: rgba(255, 255, 255, 0.05);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-dark);
+            background-image:
+                radial-gradient(circle at 100% 0%, rgba(79, 70, 229, 0.08) 0%, transparent 35%),
+                radial-gradient(circle at 0% 100%, rgba(79, 70, 229, 0.08) 0%, transparent 35%);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-dark);
+            border-right: 1px solid var(--border-glass);
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-light);
+            margin-bottom: 3.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.4);
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-dim);
+            padding: 1rem 1.25rem;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        .nav-link.active {
+            background: rgba(79, 70, 229, 0.15);
+            color: var(--primary-light);
+            border: 1px solid rgba(79, 70, 229, 0.2);
+        }
+
+        /* Main */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 2.5rem;
+            width: calc(100% - 280px);
+            min-width: 0;
+        }
+
+        .download-btn {
+            text-decoration: none;
+            padding: 8px 12px;
+            background: var(--primary);
+            color: white;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
+        }
+
+        .download-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
+        }
+
+        .header-top {
+            margin-bottom: 3.5rem;
+        }
+
+        .header-top h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        /* Filters */
+        .filters-glass {
+            background: var(--card-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            padding: 2rem;
+            backdrop-filter: blur(12px);
+            margin-bottom: 2.5rem;
+            display: flex;
+            gap: 2rem;
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .filter-group label {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .styled-select {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-glass);
+            padding: 1rem;
+            border-radius: 14px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .btn-apply {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        /* Table */
+        .table-wrap {
+            background: var(--card-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 32px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 1.5rem;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--text-dim);
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        td {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-glass);
+            vertical-align: middle;
+        }
+
+        .badge-status {
+            padding: 6px 14px;
+            border-radius: 99px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .badge-Approved {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .badge-Rejected {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .remark-text {
+            color: var(--text-dim);
+            font-style: italic;
+            font-size: 0.85rem;
+            max-width: 250px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-up {
+            animation: fadeIn 0.8s ease forwards;
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 21h18"></path>
+                    <path d="M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4"></path>
+                    <path d="M5 21V10.85"></path>
+                    <path d="M19 21V10.85"></path>
+                    <path d="M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"></path>
+                </svg>
+            </div>
+            <span>FinGuard</span>
+        </div>
+        <nav>
+            <a href="/bank_dashboard" class="nav-link">Active Review</a>
+            <a href="/bank/history" class="nav-link active">Decision History</a>
+            <a href="/banklogout" class="nav-link">Sign Out</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="header-top animate-up">
+            <h1>Decision Audit Trail</h1>
+            <p style="color: var(--text-dim);">Comprehensive log of historical credit mandates</p>
+        </div>
+
+        <form method="get" class="filters-glass animate-up">
+            <div class="filter-group">
+                <label>Status Filter</label>
+                <select name="status" class="styled-select">
+                    <option value="">All Decisions</option>
+                    <option value="Approved" {% if status_filter=='Approved' %}selected{% endif %}>Show Approved
+                    </option>
+                    <option value="Rejected" {% if status_filter=='Rejected' %}selected{% endif %}>Show Rejected
+                    </option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Risk Level</label>
+                <select name="risk" class="styled-select">
+                    <option value="">All Tiers</option>
+                    <option value="High Risk" {% if risk_filter=='High Risk' %}selected{% endif %}>High Risk</option>
+                    <option value="Low Risk" {% if risk_filter=='Low Risk' %}selected{% endif %}>Low Risk</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-apply">Filter History</button>
+        </form>
+
+        <div class="table-wrap animate-up">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Reference</th>
+                        <th>User Identity</th>
+                        <th>Fiscal Value</th>
+                        <th>AI Score</th>
+                        <th>Status</th>
+                        <th>Compliance Note</th>
+                        <th>Timestamp</th>
+                        <th>Mandate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in records %}
+                    <tr>
+                        <td style="font-weight: 800;">#APP-{{ r.application_id }}</td>
+                        <td>
+                            <a href="{{ url_for('bank_user_history', user_id=r.user_id) }}"
+                                style="color: var(--primary-light); text-decoration: none; font-weight: 700;">
+                                User #{{ r.user_id }}
+                            </a>
+                        </td>
+                        
+                        
+                        <td>
+                            <div style="font-weight: 700;">₹{{ "{:,.0f}".format(r.loan_amount) }}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-dim);">Inc: ₹{{ "{:,.0f}".format(r.income)
+                                }}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 800;">{{ r.credit_score }}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-dim);">{{ r.risk_level }}</div>
+                        </td>
+                        <td><span class="badge-status badge-{{ r.status }}">{{ r.status }}</span></td>
+                        <td class="remark-text">"{{ r.banker_reason or 'No additional remarks.' }}"</td>
+                        <td style="font-size: 0.85rem; color: var(--text-dim);">{{ r.created_at.strftime('%b %d, %Y') if
+                            r.created_at }}</td>
+                        <td>
+                            <a href="/download_report/{{ r.application_id }}" class="download-btn">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                PDF
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 4rem;">No historical records found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+
+</html>

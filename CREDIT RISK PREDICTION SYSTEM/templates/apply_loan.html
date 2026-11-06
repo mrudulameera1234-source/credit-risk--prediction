@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capital Request | FinGuard Credit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --bg-dark: #020617;
+            --sidebar-dark: #000000;
+            --card-glass: rgba(255, 255, 255, 0.03);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-dark);
+            background-image:
+                radial-gradient(circle at 0% 0%, rgba(79, 70, 229, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(79, 70, 229, 0.1) 0%, transparent 40%);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-dark);
+            border-right: 1px solid var(--border-glass);
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-light);
+            margin-bottom: 3.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 25px rgba(79, 70, 229, 0.5);
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-dim);
+            padding: 1rem 1.25rem;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .nav-link.active {
+            background: rgba(79, 70, 229, 0.15);
+            color: var(--primary-light);
+            border: 1px solid rgba(79, 70, 229, 0.2);
+        }
+
+        /* Main */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 2.5rem 4rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .apply-card {
+            background: var(--card-glass);
+            border: 1px solid var(--border-glass);
+            padding: 4rem;
+            border-radius: 40px;
+            width: 100%;
+            max-width: 900px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 1rem;
+            letter-spacing: -0.05em;
+        }
+
+        .header p {
+            color: var(--text-dim);
+            text-align: center;
+            margin-bottom: 4rem;
+            font-size: 1.1rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        label {
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        input,
+        select {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-glass);
+            padding: 1.1rem;
+            border-radius: 16px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1.25rem;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 4rem;
+            transition: all 0.4s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn-submit:hover {
+            background: #6366f1;
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px -10px rgba(79, 70, 229, 0.5);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+            </div>
+            <span>FinGuard</span>
+        </div>
+        <nav style="flex: 1;">
+            <a href="/user_dashboard" class="nav-link">Dashboard</a>
+            <a href="/apply_loan" class="nav-link active">Apply for Credit</a>
+            <a href="/my_applications" class="nav-link">My Requests</a>
+            <a href="/check_credit_risk" class="nav-link">Risk Analysis</a>
+        </nav>
+        <a href="/logout" class="nav-link" style="color: #f87171;">Sign Out</a>
+    </aside>
+
+    <main class="main-content">
+        <div class="apply-card">
+            <div class="header">
+                <h1>Capital Mandate Request</h1>
+                <p>Formal submission for institutional credit lines and private lending mandates.</p>
+            </div>
+
+            <form action="{{ url_for('apply_loan') }}" method="post" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Fiscal Liquidity (Monthly Income)</label>
+                        <input type="number" name="income" placeholder="e.g. ₹5,00,000" id="incomeInput" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Requested Mandate (Loan Amount)</label>
+                        <input type="number" name="loan_amount" placeholder="e.g. ₹10,00,000" id="loanInput" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Employment Identity</label>
+                        <select name="OCCUPATION_TYPE" id="occInput" required>
+                            <option>Laborers</option>
+                            <option>Core staff</option>
+                            <option>Sales staff</option>
+                            <option>Managers</option>
+                            <option>Drivers</option>
+                            <option>Accountants</option>
+                            <option>High skill tech staff</option>
+                            <option>Medicine staff</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Select Banking Institution</label>
+                        <select name="bank_name" id="bankInput" required>
+                            <option value="State Bank of India">State Bank of India</option>
+                            <option value="HDFC Bank">HDFC Bank</option>
+                            <option value="ICICI Bank">ICICI Bank</option>
+                            <option value="Axis Bank">Axis Bank</option>
+                            <option value="Punjab National Bank">Punjab National Bank</option>
+                            <option value="Bank of Baroda">Bank of Baroda</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Organization Category</label>
+                        <select name="ORGANIZATION_TYPE" id="orgInput" required>
+                            <option>Business Entity Type 3</option>
+                            <option>Self-employed</option>
+                            <option>Government</option>
+                            <option>School</option>
+                            <option>Construction</option>
+                            <option>XNA</option>
+                            <option>Medicine</option>
+                            <option>Trade: type 7</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Fiscal Maturity (Applicant Age in Years)</label>
+                        <input type="number" name="age" placeholder="e.g. 35" id="ageInput" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Official Verification (Salary Slip PDF/IMG)</label>
+                        <input type="file" name="salary_slip" accept=".pdf,image/*" required
+                            style="padding: 0.8rem; font-size: 0.85rem;">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    Authorize Mandate Submission
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </main>
+</body>
+
+</html>

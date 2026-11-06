@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Identity | FinGuard Enterprise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --bg-dark: #020617;
+            --card-glass: rgba(255, 255, 255, 0.03);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg-dark);
+            background-image:
+                radial-gradient(circle at 80% 10%, rgba(79, 70, 229, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 20% 90%, rgba(79, 70, 229, 0.1) 0%, transparent 40%);
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+            color: var(--text-main);
+            padding: 2rem 1.5rem;
+        }
+
+        .register-card {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            width: 100%;
+            max-width: 460px;
+            padding: 3.5rem;
+            border-radius: 32px;
+            border: 1px solid var(--border-glass);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            z-index: 10;
+            text-align: center;
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .icon-container {
+            width: 72px;
+            height: 72px;
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--primary-light);
+            border: 1px solid rgba(79, 70, 229, 0.2);
+            border-radius: 20px;
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(79, 70, 229, 0.1);
+        }
+
+        h2 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.03em;
+        }
+
+        p.subtitle {
+            color: var(--text-dim);
+            margin-bottom: 2.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-dim);
+            margin-bottom: 0.75rem;
+            margin-left: 4px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            font-size: 1rem;
+            color: white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+            transform: translateY(-1px);
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 1.5rem;
+            box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px -5px rgba(79, 70, 229, 0.5);
+            filter: brightness(1.1);
+        }
+
+        .alert {
+            padding: 14px 20px;
+            border-radius: 14px;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-left: 4px solid;
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border-color: #f59e0b;
+        }
+
+        .links {
+            margin-top: 2rem;
+            font-size: 0.95rem;
+            color: var(--text-dim);
+        }
+
+        .links a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .links a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .benefit-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 2rem;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            font-weight: 600;
+        }
+
+        .benefit-tag svg {
+            color: #10b981;
+        }
+
+        .bg-glow {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            filter: blur(150px);
+            opacity: 0.12;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-glow" style="top: -10%; right: -10%;"></div>
+    <div class="bg-glow" style="bottom: -10%; left: -10%;"></div>
+
+    <div class="register-card">
+        <div class="icon-container">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="8.5" cy="7" r="4"></circle>
+                <line x1="20" y1="8" x2="20" y2="14"></line>
+                <line x1="17" y1="11" x2="23" y2="11"></line>
+            </svg>
+        </div>
+
+        <h2>Create Identity</h2>
+        <p class="subtitle">Join the elite network for advanced credit analysis</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+        <div class="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endwith %}
+
+        <form method="post" id="regForm" autocomplete="off">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="form-group">
+                <label for="full_name">Legal Full Name</label>
+                <input type="text" id="full_name" name="full_name" value="" autocomplete="off" required>
+            </div>
+
+            <div class="form-group">
+                <label for="username">System Username</label>
+                <input type="text" id="username" name="username" value="" autocomplete="off" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Official Email Address</label>
+                <input type="email" id="email" name="email" value="" autocomplete="off" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Security Password</label>
+                <input type="password" id="password" name="password" value="" autocomplete="new-password" required>
+                <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 8px; line-height: 1.4;">
+                    <p style="font-weight: 700; margin-bottom: 4px; color: var(--primary-light);">Secure Mandate
+                        Requirements:</p>
+                    <ul style="list-style: none; padding-left: 5px;">
+                        <li>• Minimum 8 characters</li>
+                        <li>• Uppercase & Lowercase letters</li>
+                        <li>• At least one digit (0-9)</li>
+                        <li>• One special character (!@#$...)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button type="submit">Establish Identity</button>
+        </form>
+
+        <script>
+            window.onload = function () {
+                setTimeout(function () {
+                    document.getElementById('full_name').value = '';
+                    document.getElementById('username').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('password').value = '';
+                }, 100);
+            };
+        </script>
+
+        <div class="links">
+            Existing member? <a href="/user_login">Sign in here</a>
+        </div>
+
+        <div class="benefit-tag">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Enterprise-Grade AI Protocol Active
+        </div>
+    </div>
+
+</body>
+
+</html>

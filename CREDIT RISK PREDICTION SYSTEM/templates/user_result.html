@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandate Analysis | FinGuard AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --bg-dark: #020617;
+            --sidebar-dark: #000000;
+            --card-glass: rgba(255, 255, 255, 0.03);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-dark);
+            background-image:
+                radial-gradient(circle at 100% 0%, rgba(79, 70, 229, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 0% 100%, rgba(79, 70, 229, 0.1) 0%, transparent 40%);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .result-panel {
+            background: var(--card-glass);
+            border: 1px solid var(--border-glass);
+            padding: 4rem;
+            border-radius: 48px;
+            width: 100%;
+            max-width: 1000px;
+            backdrop-filter: blur(25px);
+            box-shadow: 0 60px 120px -20px rgba(0, 0, 0, 0.8);
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .top-section {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .score-box {
+            margin: 2rem 0;
+        }
+
+        .score-val {
+            font-size: 6rem;
+            font-weight: 800;
+            background: linear-gradient(to bottom, #fff, var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.05em;
+        }
+
+        .status-tag {
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            padding: 8px 20px;
+            border-radius: 99px;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+
+        .tag-High {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .tag-Low {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .analysis-card {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 2rem;
+            border-radius: 24px;
+            border: 1px solid var(--border-glass);
+            text-align: center;
+        }
+
+        .analysis-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .analysis-val {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .ai-caveat {
+            background: rgba(79, 70, 229, 0.05);
+            padding: 2rem;
+            border-radius: 20px;
+            border-left: 4px solid var(--primary);
+            margin-bottom: 4rem;
+        }
+
+        .ai-caveat h4 {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--primary-light);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .ai-caveat p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .btn-stack {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .btn-base {
+            flex: 1;
+            padding: 1.15rem;
+            border-radius: 18px;
+            font-weight: 800;
+            font-size: 1rem;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -10px rgba(79, 70, 229, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border: 1px solid var(--border-glass);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .warning-notice {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 2.5rem;
+            border-radius: 28px;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .warning-notice h3 {
+            color: var(--danger);
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="result-panel">
+        <div class="top-section">
+            <h5
+                style="color: var(--primary-light); font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; font-size: 0.75rem;">
+                Mandate Assessment Score</h5>
+            <div class="score-box">
+                <div class="score-val">{{ credit_score }}</div>
+                <div class="status-tag tag-{{ risk_level.split(' ')[0] }}">
+                    {{ risk_level }} DETECTED
+                </div>
+            </div>
+            <p style="color: var(--text-dim); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Our ML engines have
+                computed your capital readiness based on institutional risk parameters.</p>
+        </div>
+
+        {% if risk_level == "High Risk" %}
+        <div class="warning-notice">
+            <h3>🔴 High Volatility Warning</h3>
+            <p style="color: var(--text-dim); line-height: 1.7;">Based on your current fiscal profile and a {{
+                "%.1f"|format(probability * 100) }}% default risk, we cannot recommend loan approval at this time. Our
+                protocol suggests stabilizing internal debt-to-income metrics before re-submission.</p>
+        </div>
+        {% else %}
+        <div class="analysis-grid">
+            <div class="analysis-card">
+                <div class="analysis-label">Approved Limit</div>
+                <div class="analysis-val">{{ recommended_loan }}</div>
+            </div>
+            <div class="analysis-card">
+                <div class="analysis-label">Interest Mandate</div>
+                <div class="analysis-val">{{ interest_rate }} (APR)</div>
+            </div>
+            <div class="analysis-card">
+                <div class="analysis-label">Tenure Window</div>
+                <div class="analysis-val">{{ tenure }}</div>
+            </div>
+            <div class="analysis-card" style="grid-column: span 3; margin-top: 1rem; background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.2);">
+                <div class="analysis-label" style="color: var(--success);">Verification Intelligence</div>
+                <div class="analysis-val" style="font-size: 1rem;">{{ salary_status }}</div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="ai-caveat">
+            <h4>Neural Vector Interpretation</h4>
+            <p>"{{ explanation }}"</p>
+        </div>
+
+        <div class="btn-stack">
+            <a href="/user_dashboard" class="btn-base btn-primary">Return to Command Center</a>
+            <a href="/my_applications" class="btn-base btn-secondary">Trace Application History</a>
+        </div>
+    </div>
+</body>
+
+</html>

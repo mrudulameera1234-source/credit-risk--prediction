@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Requests | FinGuard Credit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --bg-dark: #020617;
+            --sidebar-dark: #000000;
+            --card-glass: rgba(255, 255, 255, 0.03);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-dark);
+            background-image:
+                radial-gradient(circle at 100% 0%, rgba(79, 70, 229, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 0% 100%, rgba(79, 70, 229, 0.08) 0%, transparent 40%);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-dark);
+            border-right: 1px solid var(--border-glass);
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-light);
+            margin-bottom: 3.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 25px rgba(79, 70, 229, 0.5);
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-dim);
+            padding: 1rem 1.25rem;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .nav-link.active {
+            background: rgba(79, 70, 229, 0.15);
+            color: var(--primary-light);
+            border: 1px solid rgba(79, 70, 229, 0.2);
+        }
+
+        /* Main */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 2.5rem 2rem;
+            width: calc(100% - 280px);
+            min-width: 0;
+        }
+
+        .download-btn {
+            text-decoration: none;
+            padding: 10px 16px;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
+        }
+
+        .download-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .header-top h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+        }
+
+        /* Table */
+        .table-wrap {
+            background: var(--card-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 32px;
+            overflow-x: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 1.5rem;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        td {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-glass);
+            vertical-align: middle;
+        }
+
+        .app-id {
+            font-weight: 800;
+            color: var(--primary-light);
+            font-size: 1rem;
+        }
+
+        .financial-val {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .status-Pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .status-Approved {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-Rejected {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .ai-risk {
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .risk-high {
+            color: var(--danger);
+        }
+
+        .risk-low {
+            color: var(--success);
+        }
+
+        .remark {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            font-style: italic;
+            max-width: 240px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+            </div>
+            <span>FinGuard</span>
+        </div>
+        <nav style="flex: 1;">
+            <a href="/user_dashboard" class="nav-link">Dashboard</a>
+            <a href="/apply_loan" class="nav-link">Apply for Credit</a>
+            <a href="/my_applications" class="nav-link active">My Requests</a>
+            <a href="/check_credit_risk" class="nav-link">Risk Analysis</a>
+        </nav>
+        <a href="/logout" class="nav-link" style="color: #f87171;">Sign Out</a>
+    </aside>
+
+    <main class="main-content">
+        <div class="header-top animate">
+            <h1>Application History</h1>
+            <p style="color: var(--text-dim);">Live status tracking of your financial mandates</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div style="padding: 1.25rem; border-radius: 16px; margin-bottom: 2rem; 
+                    background: {{ 'rgba(239, 68, 68, 0.1)' if category == 'danger' else 'rgba(16, 185, 129, 0.1)' }}; 
+                    border: 1px solid {{ 'rgba(239, 68, 68, 0.2)' if category == 'danger' else 'rgba(16, 185, 129, 0.2)' }}; 
+                    color: {{ '#f87171' if category == 'danger' else '#34d399' }}; 
+                    font-weight: 600;" class="animate" style="animation-delay: 0.05s;">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="table-wrap animate" style="animation-delay: 0.1s;">
+            {% if records|length == 0 %}
+            <div style="padding: 5rem; text-align: center; color: var(--text-dim);">
+                <p>No active capital requests found in your history.</p>
+            </div>
+            {% else %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Reference</th>
+                        <th>Fiscal Value</th>
+                        <th>AI Risk Profile</th>
+                        <th>Mandate Status</th>
+                        <th>Officer Remarks</th>
+                        <th>Applied Date</th>
+                        <th>Official Mandate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in records %}
+                    <tr>
+                        <td class="app-id">#APP-{{ app.application_id }}</td>
+                        <td>
+                            <div class="financial-val">₹{{ "{:,.0f}".format(app.loan_amount) }}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-dim);">Bank: {{ app.bank_name or 'General'
+                                }}</div>
+                        </td>
+                        <td>
+                            <div class="ai-risk {{ 'risk-high' if app.risk_level == 'High Risk' else 'risk-low' }}">
+                                {{ app.risk_level }} ({{ "%.1f"|format(app.probability * 100) }}%)
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-badge status-{{ app.status }}">{{ app.status }}</span>
+                        </td>
+                        <td class="remark">
+                            "{{ app.banker_reason or 'Oversight in progress...' }}"
+                        </td>
+                        <td style="font-size: 0.85rem; color: var(--text-dim);">
+                            {{ app.created_at.strftime('%b %d, %Y') if app.created_at else 'N/A' }}
+                        </td>
+                        <td>
+                            <a href="/download_report/{{ app.application_id }}" class="download-btn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                Download PDF
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+    </main>
+</body>
+
+</html>

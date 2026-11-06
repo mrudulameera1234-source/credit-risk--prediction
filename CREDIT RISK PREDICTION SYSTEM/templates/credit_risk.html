@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Risk Simulator | FinGuard Credit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --bg-dark: #020617;
+            --sidebar-dark: #000000;
+            --card-glass: rgba(255, 255, 255, 0.03);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-dark);
+            background-image:
+                radial-gradient(circle at 100% 0%, rgba(79, 70, 229, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 0% 100%, rgba(79, 70, 229, 0.08) 0%, transparent 40%);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-dark);
+            border-right: 1px solid var(--border-glass);
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-light);
+            margin-bottom: 3.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 25px rgba(79, 70, 229, 0.5);
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-dim);
+            padding: 1rem 1.25rem;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .nav-link.active {
+            background: rgba(79, 70, 229, 0.15);
+            color: var(--primary-light);
+            border: 1px solid rgba(79, 70, 229, 0.2);
+        }
+
+        /* Main */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 2.5rem 4rem;
+            width: calc(100% - 280px);
+            min-width: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .simulator-card {
+            background: var(--card-glass);
+            border: 1px solid var(--border-glass);
+            padding: 3.5rem;
+            border-radius: 40px;
+            width: 100%;
+            max-width: 850px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.7);
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+
+        .card-header h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-header p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+
+        .section-tag {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-tag::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--border-glass);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-dim);
+        }
+
+        input,
+        select {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-glass);
+            padding: 1.15rem;
+            border-radius: 16px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-analyze {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1.25rem;
+            border-radius: 18px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 3.5rem;
+            transition: all 0.4s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn-analyze:hover {
+            background: #6366f1;
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px -10px rgba(79, 70, 229, 0.5);
+        }
+
+        #resultBox {
+            margin-top: 3rem;
+            padding: 2.5rem;
+            border-radius: 24px;
+            display: none;
+            text-align: center;
+            border: 1px solid transparent;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .res-High {
+            background: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .res-Low {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .res-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+        }
+
+        .res-desc {
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+            </div>
+            <span>FinGuard</span>
+        </div>
+        <nav style="flex: 1;">
+            <a href="/user_dashboard" class="nav-link">Dashboard</a>
+            <a href="/apply_loan" class="nav-link">Apply for Credit</a>
+            <a href="/my_applications" class="nav-link">My Requests</a>
+            <a href="/check_credit_risk" class="nav-link active">Risk Analysis</a>
+        </nav>
+        <a href="/logout" class="nav-link" style="color: #f87171;">Sign Out</a>
+    </aside>
+
+    <main class="main-content">
+        <div class="simulator-card">
+            <div class="card-header">
+                <h1>ML Risk Simulator</h1>
+                <p>Run complex credit diagnostic algorithms against your profile</p>
+            </div>
+
+            <form id="predictionForm">
+                <div class="section-tag">Diagnostic Parameters</div>
+
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Fiscal Liquidity (Annual Income)</label>
+                        <input type="number" name="AMT_INCOME_TOTAL" placeholder="e.g. 500000" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Requested Exposure (Loan Amount)</label>
+                        <input type="number" name="AMT_CREDIT" placeholder="e.g. 1000000" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Age (Years)</label>
+                        <input type="number" name="age" placeholder="e.g. 30" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Organization Category</label>
+                        <select name="ORGANIZATION_TYPE" required>
+                            <option value="">Select Category</option>
+                            <option>Business Entity Type 3</option>
+                            <option>Self-employed</option>
+                            <option>Government</option>
+                            <option>School</option>
+                            <option>Construction</option>
+                            <option>XNA</option>
+                        </select>
+                    </div>
+                    <div class="input-group" style="grid-column: span 2;">
+                        <label>Professional Designation</label>
+                        <select name="OCCUPATION_TYPE" required>
+                            <option value="">Select Role</option>
+                            <option>Laborers</option>
+                            <option>Core staff</option>
+                            <option>Sales staff</option>
+                            <option>Managers</option>
+                            <option>Drivers</option>
+                            <option>Accountants</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Core Model Features -->
+                <input type="hidden" name="EXT_SOURCE_1" value="0.5">
+                <input type="hidden" name="EXT_SOURCE_2" value="0.5">
+                <input type="hidden" name="EXT_SOURCE_3" value="0.5">
+                <input type="hidden" name="DAYS_EMPLOYED" value="-1500">
+                <input type="hidden" name="DAYS_REGISTRATION" value="-3000">
+                <input type="hidden" name="DAYS_ID_PUBLISH" value="-2000">
+                <input type="hidden" name="DAYS_LAST_PHONE_CHANGE" value="-500">
+                <input type="hidden" name="AMT_ANNUITY" value="25000">
+                <input type="hidden" name="AMT_GOODS_PRICE" value="300000">
+                <input type="hidden" name="REGION_POPULATION_RELATIVE" value="0.02">
+                <input type="hidden" name="OBS_30_CNT_SOCIAL_CIRCLE" value="2">
+                <input type="hidden" name="AMT_REQ_CREDIT_BUREAU_YEAR" value="1">
+                <input type="hidden" name="OWN_CAR_AGE" value="0">
+                <input type="hidden" name="HOUR_APPR_PROCESS_START" value="12">
+                <input type="hidden" name="WEEKDAY_APPR_PROCESS_START" value="MONDAY">
+
+                <button type="submit" id="submitBtn" class="btn-analyze">
+                    Execute Risk Diagnostic
+                </button>
+            </form>
+
+            <div id="resultBox">
+                <div class="res-title" id="resultTitle">Processing Datasets...</div>
+                <div class="res-desc" id="resultDesc">Our neural networks are evaluating your fiscal profile.</div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const form = document.getElementById("predictionForm");
+        const resultBox = document.getElementById("resultBox");
+        const submitBtn = document.getElementById("submitBtn");
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = "Computing Risk Vectors...";
+            resultBox.style.display = "none";
+
+            const formData = new FormData(form);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = isNaN(value) ? value : Number(value);
+            });
+
+            try {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                const response = await fetch("/predict", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": csrfToken
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || `Server Error (${response.status})`);
+                }
+
+                const isHigh = result.risk_level.startsWith("High");
+                resultBox.className = "res-" + (isHigh ? "High" : "Low");
+                resultBox.style.display = "block";
+
+                document.getElementById("resultTitle").innerHTML = isHigh ? "🔴 Critical Risk Vectors Detected" : "🟢 Optimal Risk Profile";
+                document.getElementById("resultTitle").style.color = isHigh ? "#f87171" : "#34d399";
+
+                let message = isHigh
+                    ? "Our diagnostic engines detected high volatility. We recommend stabilizing internal fiscal metrics before formal application."
+                    : "The algorithm indicates exceptional creditworthiness. You are eligible for Tier-1 interest rates and accelerated mandates.";
+
+                // Add more details to the result box
+                message += `<br><br><strong>Credit Score:</strong> ${result.credit_score} / 850`;
+                message += `<br><strong>Risk Level:</strong> ${result.risk_level}`;
+                if (!isHigh) {
+                    message += `<br><strong>Recommended Loan:</strong> ${result.recommended_loan}`;
+                }
+
+                document.getElementById("resultDesc").innerHTML = message;
+
+            } catch (err) {
+                alert("Diagnostic system error: " + err.message);
+            }
+            finally { submitBtn.disabled = false; submitBtn.innerHTML = "Execute Risk Diagnostic"; }
+        });
+    </script>
+</body>
+
+</html>

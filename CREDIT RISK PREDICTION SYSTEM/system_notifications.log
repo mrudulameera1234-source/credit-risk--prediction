@@ -1,0 +1,50 @@
+# FinGuard System Logs initialization
+
+[2026-02-13 22:15:51] TO: mrudulameera1234@gmail.com
+SUBJECT: Official Mandate Update: #1
+Identity: Meera Madhu
+Decision: APPROVED
+Fiscal Value: INR 200,000.00
+Officer Remarks: No additional remarks.
+
+You may download the full mandate report from your dashboard.
+--------------------------------------------------
+
+[2026-02-14 11:37:01] TO: mrudulameera1234@gmail.com
+SUBJECT: Official Mandate Update: #6
+Identity: Meera Madhu
+Decision: REJECTED
+Fiscal Value: INR 1,000,000.00
+Officer Remarks: High risk of repayment. Cannot be approved
+
+You may download the full mandate report from your dashboard.
+--------------------------------------------------
+
+[2026-02-14 13:15:00] TO: mrudulameera1234@gmail.com
+SUBJECT: FinGuard Security: Password Reset Request
+Identity: Meera Madhu
+Role: USER
+
+Use this secure mandate to reset your credentials: http://127.0.0.1:5000/reset_password/d41ed436-c4cc-441d-b2dd-a40f0b99e8fc
+Valid for 60 minutes.
+--------------------------------------------------
+
+[2026-02-19 11:38:56] TO: parvathy13dec@gmail.com
+SUBJECT: Official Mandate Update: #7
+Identity: Parvathy
+Decision: APPROVED
+Fiscal Value: INR 20,000.00
+Officer Remarks: No additional remarks.
+
+You may download the full mandate report from your dashboard.
+--------------------------------------------------
+
+[2026-04-16 14:27:34] TO: anjanafutureoptima@gmail.com
+SUBJECT: Official Mandate Update: #10
+Identity: Anjana_Aji
+Decision: REJECTED
+Fiscal Value: INR 200,000.00
+Officer Remarks: Risk is high
+
+You may download the full mandate report from your dashboard.
+--------------------------------------------------

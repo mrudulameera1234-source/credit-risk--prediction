@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banker Dashboard | Enterprise Credit Risk</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --bg-dark: #0f172a;
+            --sidebar-dark: #020617;
+            --card-glass: rgba(255, 255, 255, 0.05);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-dark);
+            background-image:
+                radial-gradient(circle at 0% 0%, rgba(79, 70, 229, 0.08) 0%, transparent 35%),
+                radial-gradient(circle at 100% 100%, rgba(79, 70, 229, 0.08) 0%, transparent 35%);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-dark);
+            border-right: 1px solid var(--border-glass);
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-light);
+            margin-bottom: 3.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.4);
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex: 1;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-dim);
+            padding: 1rem 1.25rem;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .nav-link.active {
+            background: rgba(79, 70, 229, 0.15);
+            color: var(--primary-light);
+            border: 1px solid rgba(79, 70, 229, 0.2);
+        }
+
+        .nav-link.logout {
+            color: #f87171;
+            margin-top: auto;
+        }
+
+        .nav-link.logout:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 2.5rem;
+            width: calc(100% - 280px);
+            min-width: 0;
+            /* Critical for flex children to shrink */
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 3.5rem;
+        }
+
+        .welcome h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+
+        .officer-badge {
+            background: var(--card-glass);
+            padding: 1rem 1.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .officer-avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* Filter Section */
+        .filters-glass {
+            background: var(--card-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            padding: 2rem;
+            backdrop-filter: blur(12px);
+            margin-bottom: 2.5rem;
+            display: flex;
+            gap: 2rem;
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .filter-group label {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .styled-select {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-glass);
+            padding: 1rem 1.25rem;
+            border-radius: 14px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .styled-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+
+        .btn-apply {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-apply:hover {
+            background: #6366f1;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
+        }
+
+        /* Table Design */
+        .table-wrap {
+            background: var(--card-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 32px;
+            overflow-x: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 1.5rem;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-dim);
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        td {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-glass);
+            vertical-align: top;
+        }
+
+        .app-ref {
+            font-weight: 800;
+            color: var(--primary-light);
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+        }
+
+        .meta-text {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .financial-val {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+        }
+
+        .score-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .score-num {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .risk-tag {
+            padding: 6px 14px;
+            border-radius: 99px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .risk-tag.high {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .risk-tag.low {
+            background: rgba(16, 185, 129, 0.1);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .ai-intel {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 1rem;
+            border-radius: 16px;
+            border-left: 3px solid var(--primary);
+            font-style: italic;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-dim);
+            min-width: 200px;
+            max-width: 280px;
+        }
+
+        /* Action Form */
+        .decision-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 240px;
+        }
+
+        .styled-textarea {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 12px;
+            color: white;
+            font-size: 0.9rem;
+            resize: none;
+            height: 80px;
+        }
+
+        .btn-confirm {
+            background: white;
+            color: var(--bg-dark);
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-confirm:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .status-badge.approved {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-badge.rejected {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-up {
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 21h18"></path>
+                    <path d="M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4"></path>
+                    <path d="M5 21V10.85"></path>
+                    <path d="M19 21V10.85"></path>
+                    <path d="M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"></path>
+                </svg>
+            </div>
+            <span>FinGuard</span>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="/bank_dashboard" class="nav-link active">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                Active Review
+            </a>
+            <a href="/bank/history" class="nav-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                </svg>
+                Decision History
+            </a>
+            <a href="/banklogout" class="nav-link logout">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                Sign Out
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="header-top animate-up">
+            <div class="welcome">
+                <h1>Decision Oversight</h1>
+                <p>Enterprise grade credit assessment & underwriting</p>
+            </div>
+            <div class="officer-badge">
+                <div class="officer-avatar">BK</div>
+                <div style="text-align: left;">
+                    <div style="font-weight: 800; font-size: 0.95rem;">Officer Terminal</div>
+                    <div style="color: var(--text-dim); font-size: 0.75rem;">{{ current_bank }} • ACTIVE</div>
+                </div>
+            </div>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div style="padding: 1.25rem; border-radius: 16px; margin-bottom: 2rem; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: var(--success); font-weight: 600;"
+            class="animate-up">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form method="get" class="filters-glass animate-up" style="animation-delay: 0.1s;">
+            <div class="filter-group">
+                <label>Risk Threshold</label>
+                <select name="risk" class="styled-select">
+                    <option value="">All Risk Tiers</option>
+                    <option value="High Risk" {% if risk_filter=='High Risk' %}selected{% endif %}>Critical Risk
+                    </option>
+                    <option value="Low Risk" {% if risk_filter=='Low Risk' %}selected{% endif %}>Safe Records</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-apply">Update Queue</button>
+        </form>
+
+        <div class="table-wrap animate-up" style="animation-delay: 0.2s;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Submission Details</th>
+                        <th>Fiscal Exposure</th>
+                        <th>Risk Assessment</th>
+                        <th>AI Intellectual Input</th>
+                        <th>Execution</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                    <tr>
+                        <td>
+                            <div class="app-ref">#APP-{{ app.application_id }}</div>
+                            <div class="meta-text">
+                                Applicant: <a href="{{ url_for('bank_user_history', user_id=app.user_id) }}"
+                                    style="color: var(--primary-light); text-decoration: none; font-weight: 700;">{{
+                                    app.username }}</a><br>
+                                <span style="font-size: 0.75rem;">{{ app.email }}</span><br>
+                                <span style="font-size: 0.75rem;">Submitted: {{ app.created_at.strftime('%b %d, %H:%M')
+                                    if app.created_at else 'N/A' }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="financial-val">₹{{ "{:,.0f}".format(app.loan_amount) }}</div>
+                            <div class="meta-text">Income: ₹{{ "{:,.0f}".format(app.income) }}</div>
+                            <div
+                                style="font-size: 0.7rem; color: var(--primary-light); margin-top: 4px; font-weight: 800;">
+                                DTI Ratio: {{ "%.2f"|format(app.loan_amount / app.income) if app.income > 0 else '∞' }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="score-pill">
+                                <span class="score-num">{{ app.credit_score }}</span>
+                                <span class="risk-tag {{ 'high' if app.risk_level=='High Risk' else 'low' }}">
+                                    {{ app.risk_level }}
+                                </span>
+                            </div>
+                            <div class="meta-text" style="margin-top: 8px;">Confidence: {{ "%.1f"|format(100 -
+                                app.probability * 100) }}%</div>
+                        </td>
+                        <td>
+                            <div class="ai-intel">
+                                "{{ app.system_explanation or 'No automated intelligence data available for this
+                                applicant.' }}"
+                            </div>
+                        </td>
+                        <td>
+                            {% if app.status == 'Pending' %}
+                            <form method="post" action="{{ url_for('bank_action') }}" class="decision-panel">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input type="hidden" name="application_id" value="{{ app.application_id }}">
+                                <select name="status" class="styled-select"
+                                    style="padding: 0.75rem; font-size: 0.85rem;" required>
+                                    <option value="">Execute Action</option>
+                                    <option value="Approved">Authorize Loan</option>
+                                    <option value="Rejected">Decline Mandate</option>
+                                </select>
+                                <textarea name="banker_reason" class="styled-textarea"
+                                    placeholder="Add compliance remarks..."></textarea>
+                                <button type="submit" class="btn-confirm">Submit Decision</button>
+                            </form>
+                            {% else %}
+                            <div class="status-badge {{ app.status|lower }}">
+                                {{ app.status }}
+                            </div>
+                            {% if app.banker_reason %}
+                            <div class="meta-text" style="margin-top: 12px; font-size: 0.8rem;">
+                                <b>Note:</b> {{ app.banker_reason }}
+                            </div>
+                            {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 5rem; color: var(--text-dim);">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                style="margin-bottom: 1.5rem; opacity: 0.3;">
+                                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2">
+                                </path>
+                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            </svg>
+                            <p>No mandates currently awaiting review in this queue.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+</body>
+
+</html>
